@@ -79,7 +79,6 @@ def train_epoch():
         unsat_ratio = best_unsat / data.batch_num_cst.view(-1)
         total_csts += data.batch_num_cst.sum()
         solved = best_unsat == 0
-        # print(f'Total constraints in batch: " + {data.batch_num_cst.view(-1)}')
 
         unsat_list.append(best_unsat.cpu())
         unsat_ratio_list.append(unsat_ratio.cpu())
@@ -203,12 +202,13 @@ if __name__ == '__main__':
         train_epoch()
 
         if val_loader is not None:
-            unsat, solved = validate()
+            if epoch % 100 == 0:
+                unsat, solved = validate()
 
-            print(f'Mean Unsat Count: {unsat:.2f}, Solved: {100 * solved:.2f}%')
-            if unsat < best_unsat:
-                model.save_model(name='best')
-                best_unsat = unsat
+                print(f'Mean Unsat Count: {unsat:.2f}, Solved: {100 * solved:.2f}%')
+                if unsat < best_unsat:
+                    model.save_model(name='best')
+                    best_unsat = unsat
 
         model.save_model(name='last')
         save_opt_states(model.model_dir)
