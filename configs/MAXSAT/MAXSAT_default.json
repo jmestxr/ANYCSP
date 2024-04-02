@@ -1,20 +1,20 @@
 {
     "hidden_dim": 128,
-    "aggr_val2cst": "mean",
-    "aggr_cst2val": "mean",
-    "aggr_val2var": "mean",
+    "aggr_val2cst": "sum",
+    "aggr_cst2val": "sum",
+    "aggr_val2var": "sum",
     "sampling": "global",
     "T_train": 40,
     "T_val": 200,
-    "epochs": 500,
-    "epoch_steps": 1000,
+    "epochs": 10,
+    "epoch_steps": 500,
     "lr": 5e-06,
     "lr_decay": 0.1,
     "weight_decay": 0.0,
     "discount": 0.75,
     "reward": "improve",
     "batch_size": 25,
-    "val_batch_size": 25,
+    "val_batch_size": 50,
     "train_data": {
         "KSAT": {
             "min_k": 3,
@@ -36,6 +36,15 @@
     "val_data": {
         "FILES": {
             "path": "data/validation/MAXSAT/*.cnf"
+        }
+    },
+    "test_data": {
+        "RESALLOC": {
+            "n1": 31,
+            "n2": 2,
+            "n3": 10,
+            "n4": 5,
+            "num_phys": 50
         }
     }
 }

@@ -7,6 +7,40 @@ import networkx as nx
 import torch
 import cnfgen
 
+class ResAlloc_Generator:
+    def __init__(self, n1, n2, n3, n4, num_phys):
+        self.n1 = n1 # number of days
+        self.n2 = n2 # number of periods
+        self.n3 = n3 # number of health units
+        self.n4 = n4 # number of vacancies (physicians needed in one period)
+        self.num_phys = num_phys # number of physicians available for allocation
+
+    def create_random_instance(self):
+        num_var = self.n1 * self.n2 * self.n3 * self.n4 # number of units Mi
+
+        # To model unary constraints, generate random domain for each unit (set of physicians that can be allocated to each unit Mi)
+        domains = [torch.sort(torch.unique(torch.randint(0, self.num_phys, size=(torch.randint(1, self.num_phys + 1, size=(1,)).item(),))))[0] for _ in range(num_var)]
+        domain_sizes = torch.tensor([len(dom) for dom in domains])
+        domains = torch.cat(domains)
+
+        data = CSP_Data(num_var=num_var, domain_size=domain_sizes, domain=domains)
+
+        # Add 100 AllDiff constraints on random units (each constraint has 2 participating variables)
+        num_cst = 100
+        var_idx = []
+
+        while len(var_idx) < num_cst:
+            new_pair = torch.randint(0, num_var, size=(2,))
+            if all((new_pair != row).any() for row in var_idx):
+                var_idx.append(new_pair)
+
+        var_idx = torch.stack(var_idx)
+
+        data.add_all_different_constraint_data(var_idx)
+
+        return data
+
+
 
 class KSAT_Generator:
 
@@ -28,18 +62,18 @@ class KSAT_Generator:
         cnf = [cls for cls in cnf.clauses()]
         cnf = [np.int64(c) for c in cnf]
 
-        num_var = np.max([np.abs(c).max() for c in cnf])
-        num_const = len(cnf)
+        num_var = np.max([np.abs(c).max() for c in cnf]) # number of variables
+        num_const = len(cnf) # number of constraints
 
-        arity = np.int64([c.size for c in cnf])
-        const_idx = np.arange(0, num_const, dtype=np.int64)
-        tuple_idx = np.repeat(const_idx, arity)
+        arity = np.int64([c.size for c in cnf]) # for each contraint, how many variables participate in it. E.g. if there are 3 constraints, with C1 and C2 having 2 variables and C3 having 5 variables, then arity = [2,2,5]
+        const_idx = np.arange(0, num_const, dtype=np.int64) # Constraint indices. If there are 3 constraints, then const_idx = [0,1,2]
+        tuple_idx = np.repeat(const_idx, arity) # Given above arity and const_idx examples, we get tuple_idx = [0, 0, 1, 1, 2, 2, 2, 2]
 
         cat = np.concatenate(cnf, axis=0)
-        var_idx = np.abs(cat) - 1
+        var_idx = np.abs(cat) - 1 # If C1 and C2 each has variables X0 and X1 participating, and C2 has variables X5...X9, then var_idx=[[0, 1], [0, 1], [5, 6, 7, 8, 9]]
         val_idx = np.int64(cat > 0).reshape(-1)
 
-        data = CSP_Data(num_var=num_var, domain_size=2)
+        data = CSP_Data(num_var=num_var, domain_size=2) # number of Mi, number of physicians
         data.add_constraint_data(
             True,
             torch.tensor(const_idx),
@@ -204,4 +238,5 @@ generator_dict = {
     'COL_REG': COL_REG_Generator,
     'RB': RB_Generator,
     'MC_ER': MC_ER_Generator,
+    "RESALLOC": ResAlloc_Generator
 }

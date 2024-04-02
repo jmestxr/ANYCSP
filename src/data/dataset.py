@@ -38,7 +38,7 @@ def load_cnf_file(path):
 
 def nx_to_col(nx_graph, num_colors):
     num_vert = nx_graph.order()
-    num_edges = nx_graph.number_of_edges()
+    num_edges = nx_graph.number_of_edges() # == number of constraints
 
     idx_map = {v: i for i, v in enumerate(nx_graph.nodes())}
 

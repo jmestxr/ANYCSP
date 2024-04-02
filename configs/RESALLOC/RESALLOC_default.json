@@ -1,0 +1,36 @@
+{
+    "hidden_dim": 10,
+    "aggr_val2cst": "sum",
+    "aggr_cst2val": "sum",
+    "aggr_val2var": "sum",
+    "sampling": "global",
+    "T_train": 5,
+    "T_val": 5,
+    "epochs": 2,
+    "epoch_steps": 10,
+    "lr": 5e-06,
+    "lr_decay": 0.1,
+    "weight_decay": 0.0,
+    "discount": 0.75,
+    "reward": "improve",
+    "batch_size": 25,
+    "val_batch_size": 50,
+    "train_data": {
+        "RESALLOC": {
+            "n1": 31,
+            "n2": 2,
+            "n3": 1,
+            "n4": 10,
+            "num_phys": 100
+        }
+    },
+    "val_data": {
+        "RESALLOC": {
+            "n1": 31,
+            "n2": 2,
+            "n3": 1,
+            "n4": 10,
+            "num_phys": 100
+        }
+    }
+}

@@ -18,34 +18,34 @@ class CSP_Data:
         @param path: Path to the file the instance was parsed from (optional)
         """
         self.path = path
-        self.num_var = num_var
+        self.num_var = num_var # e.g. 3
         self.num_cst = 0
         self.num_tup_sampled = 0
 
         if isinstance(domain_size, torch.Tensor):
             self.domain_size = domain_size
         else:
-            self.domain_size = domain_size * torch.ones((num_var,), dtype=torch.int64)
+            self.domain_size = domain_size * torch.ones((num_var,), dtype=torch.int64) # e.g. [5, 5, 5]
 
-        self.num_val = int(self.domain_size.sum().numpy())
+        self.num_val = int(self.domain_size.sum().numpy()) # e.g. 15
         self.max_dom = int(self.domain_size.max().numpy())
 
-        self.var_idx = torch.repeat_interleave(torch.arange(0, num_var, dtype=torch.int64), self.domain_size)
-        self.var_off = torch.cat([torch.tensor([0]), torch.cumsum(self.domain_size, dim=0)[:-1]], dim=0)
-        self.dom_idx = torch.arange(self.num_val) - self.var_off[self.var_idx]
+        self.var_idx = torch.repeat_interleave(torch.arange(0, num_var, dtype=torch.int64), self.domain_size) # e.g. [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+        self.var_off = torch.cat([torch.tensor([0]), torch.cumsum(self.domain_size, dim=0)[:-1]], dim=0) # e.g. var offset. [0,  5, 10]
+        self.dom_idx = torch.arange(self.num_val) - self.var_off[self.var_idx] # e.g. [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
 
         if domain is not None:
             self.domain = domain
         else:
-            self.domain = torch.arange(self.num_val) - self.var_off[self.var_idx]
+            self.domain = torch.arange(self.num_val) - self.var_off[self.var_idx] # e.g. [0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
 
-        self.var_reg = 1.0 / (self.domain_size + 1.0e-8).view(-1, 1)
+        self.var_reg = 1.0 / (self.domain_size + 1.0e-8).view(-1, 1) # e.g. [[0.2000], [0.2000], [0.2000]]
         self.cst_reg = None
         self.val_reg = None
 
-        self.batch = torch.zeros((num_var,), dtype=torch.int64) if batch is None else batch
-        self.batch_size = int(self.batch.max().numpy()) + 1
-        self.batch_num_cst = torch.zeros((self.batch_size,), dtype=torch.float32)
+        self.batch = torch.zeros((num_var,), dtype=torch.int64) if batch is None else batch # e.g. [0, 0, 0]
+        self.batch_size = int(self.batch.max().numpy()) + 1 # e.g. 1
+        self.batch_num_cst = torch.zeros((self.batch_size,), dtype=torch.float32) # e.g. [0.]
 
         self.batch_num_val = scatter_sum(self.domain_size, self.batch, dim=0)
         self.batch_val_off = torch.zeros((self.batch_size,), dtype=torch.long)
