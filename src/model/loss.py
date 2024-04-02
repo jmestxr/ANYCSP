@@ -4,7 +4,7 @@ import torch
 def reward_improve(data):
     # Our default reward scheme: Difference to previous best clipped at 0
     with torch.no_grad():
-        reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat
+        reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat # get number of satisfied constraints (all_num_sat)
         reward /= data.batch_num_cst.view(-1, 1) + 1.0e-8
         reward = reward - reward[:, 0].view(-1, 1)
 
