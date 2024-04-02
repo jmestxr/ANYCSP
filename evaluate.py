@@ -112,7 +112,7 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
-    test_data = dataset_from_config(config['test_data'])
+    test_data = dataset_from_config(config['test_data'], num_samples=10)
     test_loader = DataLoader(
         test_data,
         batch_size=config['val_batch_size'],

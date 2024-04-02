@@ -21,7 +21,7 @@ def read_config(path):
     return conf_dict
 
 
-def dataset_from_config(data_config, num_samples=10):
+def dataset_from_config(data_config, num_samples=1000):
     if 'FILES' in data_config:
         dataset = File_Dataset(**data_config['FILES'])
     else:
