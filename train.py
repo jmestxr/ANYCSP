@@ -49,6 +49,8 @@ def train_epoch():
     unsat_list = []
     unsat_ratio_list = []
     solved_list = []
+    total_csts = 0
+    total_unsats = 0
 
     for data in tqdm(train_loader, total=len(train_loader), disable=args.no_bar, desc=f'Training Epoch {epoch+1}'):
         opt.zero_grad()
@@ -75,7 +77,9 @@ def train_epoch():
 
         best_unsat = data.best_num_unsat.view(-1)
         unsat_ratio = best_unsat / data.batch_num_cst.view(-1)
+        total_csts += data.batch_num_cst.sum()
         solved = best_unsat == 0
+        # print(f'Total constraints in batch: " + {data.batch_num_cst.view(-1)}')
 
         unsat_list.append(best_unsat.cpu())
         unsat_ratio_list.append(unsat_ratio.cpu())
@@ -83,6 +87,7 @@ def train_epoch():
 
         if (model.global_step + 1) % args.logging_steps == 0:
             unsat = torch.cat(unsat_list, dim=0)
+            total_unsats += unsat
             unsat_ratio = torch.cat(unsat_ratio_list, dim=0)
             solved = torch.cat(solved_list, dim=0)
             logger.add_scalar('Train/Loss', loss.mean(), model.global_step)
@@ -97,7 +102,9 @@ def train_epoch():
             model.save_model(name=f'checkpoint_{model.global_step}')
 
         model.global_step += 1
-
+    print(f'Total unsatisfied constraints: {torch.sum(total_unsats)}')
+    print(f'Total constraints: {total_csts}')
+    
 
 def validate():
     model.eval()
