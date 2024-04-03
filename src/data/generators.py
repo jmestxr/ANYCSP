@@ -27,10 +27,9 @@ class ResAlloc_Generator:
         min_weight = 1
         max_weight = 3
 
-
         # Parameters:
-        threshold_pct = 0.5 # Set minimum % of variables having unary constraints to 20%
-        num_cst = int(0.5 * self.num_phys) # number of unary constraints per variable
+        threshold_pct = 0.2 # Set minimum % of variables having unary constraints to 20%
+        num_cst = int(0.1 * self.num_phys) # number of unary constraints per variable
         num_vars_with_unary_constraints = np.random.randint(int(threshold_pct * self.num_var), self.num_var + 1)
         # num_vars_with_unary_constraints = int(threshold_pct * self.num_var)
 
@@ -60,8 +59,29 @@ class ResAlloc_Generator:
 
         #     csp_data.add_uniform_constraint_data(True, var_idx, val_idx, cst_weights)
 
-            
 
+    def generate_multiple_constraints(self, csp_data):
+        # Add 100 AllDiff binary constraints on random units
+        num_cst = 100
+        var_idx = []
+
+        while len(var_idx) < num_cst:
+            new_pair = torch.randint(0, self.num_var, size=(2,))
+            if all((new_pair != row).any() for row in var_idx):
+                var_idx.append(new_pair)
+
+        var_idx = torch.stack(var_idx)
+
+        # generate random constraint weights
+        # multiplier = 100 # need to tune this multiplier...
+        # cst_weights = torch.rand(num_cst) * multiplier
+        min_weight = 1
+        max_weight = 3
+        cst_weights = torch.randint(low=min_weight, high=max_weight+1, size=(num_cst,))
+        # cst_weights = torch.full((num_cst,), 1)
+
+        csp_data.add_all_different_constraint_data(var_idx, cst_weights)
+            
 
     def create_random_instance(self):
 
@@ -75,29 +95,9 @@ class ResAlloc_Generator:
 
         data = CSP_Data(num_var=self.num_var, domain_size=domain_sizes, domain=domains)
 
-        self.generate_unary_constraints(data)
+        # self.generate_unary_constraints(data)
 
-
-        # Add 100 AllDiff binary constraints on random units
-        num_cst = 300
-        var_idx = []
-
-        while len(var_idx) < num_cst:
-            new_pair = torch.randint(0, self.num_var, size=(2,))
-            if all((new_pair != row).any() for row in var_idx):
-                var_idx.append(new_pair)
-
-        var_idx = torch.stack(var_idx)
-
-        # generate random constraint weights
-        # multiplier = 100 # need to tune this multiplier...
-        # cst_weights = torch.rand(num_cst) * multiplier
-        # min_weight = 1
-        # max_weight = 3
-        # cst_weights = torch.randint(low=min_weight, high=max_weight+1, size=(num_cst,))
-        cst_weights = torch.full((num_cst,), 1)
-
-        data.add_all_different_constraint_data(var_idx, cst_weights)
+        self.generate_multiple_constraints(data)
 
         return data
 
