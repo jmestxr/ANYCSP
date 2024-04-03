@@ -122,6 +122,8 @@ def validate():
         total_unsat += best_unsat.float().sum().cpu().numpy()
         total_solved += (best_unsat == 0).float().sum().cpu().numpy()
         total_count += data.batch_size
+        
+        print("all_f_val:", data.all_f_val)
 
     unsat = total_unsat / total_count
     solved = total_solved / total_count
@@ -171,7 +173,7 @@ if __name__ == '__main__':
     )
 
     if 'val_data' in config:
-        val_data = dataset_from_config(config['val_data'])
+        val_data = dataset_from_config(config['val_data'], 3)
         val_loader = DataLoader(
             val_data,
             batch_size=config['val_batch_size'],

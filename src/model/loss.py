@@ -1,12 +1,25 @@
 import torch
+from torch_scatter import scatter_sum
 
+import numpy as np
 
 def reward_improve(data):
     # Our default reward scheme: Difference to previous best clipped at 0
     with torch.no_grad():
-        reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat # get number of satisfied constraints (all_num_sat)
-        reward /= data.batch_num_cst.view(-1, 1) + 1.0e-8
-        reward = reward - reward[:, 0].view(-1, 1)
+        batch_sum_of_weights = data.get_batch_weights()
+        reward = data.all_f_val / batch_sum_of_weights # doesn't work well. Values cluster around 0.9-1.0
+        # reward = np.log(data.all_f_val)
+        
+        # print(reward)
+        
+        test=data.batch_num_cst.view(-1, 1) - data.all_num_unsat
+        test /= data.batch_num_cst.view(-1, 1)
+        print(test)
+        # print("reward", reward, reward.shape) --> (25, 6)
+
+        # reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat # get number of satisfied constraints (all_num_sat); [[x1], [x2], ...]
+        # reward /= data.batch_num_cst.view(-1, 1) + 1.0e-8
+        reward = reward - reward[:, 0].view(-1, 1) # "subtractive baseline"
 
         max_prior = torch.cummax(reward, dim=1)[0]
         reward[:, 1:] -= max_prior[:, :-1]

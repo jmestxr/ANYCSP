@@ -154,7 +154,7 @@ class CSP_Data:
 
         self.add_constraint_data_(cst_data, 'ext')
 
-    def add_uniform_constraint_data(self, negate, var_idx, val_idx):
+    def add_uniform_constraint_data(self, negate, var_idx, val_idx, cst_weights):
         num_cst, num_tup, arity = val_idx.shape
         cst_idx = torch.repeat_interleave(torch.arange(num_cst), num_tup, dim=0)
         self.add_constraint_data_fixed_arity(
@@ -162,13 +162,15 @@ class CSP_Data:
             cst_idx,
             var_idx.view(-1, arity),
             val_idx.view(-1, arity),
+            cst_weights,
         )
 
-    def add_constraint_data_fixed_arity(self, negate, cst_idx, var_idx, val_idx):
+    def add_constraint_data_fixed_arity(self, negate, cst_idx, var_idx, val_idx, cst_weights):
         num_tup, arity = val_idx.shape
         num_cst = cst_idx.max() + 1
         tup_idx = torch.repeat_interleave(torch.arange(num_tup), arity)
         val_idx = self.var_off[var_idx] + val_idx
+        
         val_idx = val_idx.flatten()
         cst_type = torch.ones((num_cst,), dtype=torch.int64) if negate else torch.zeros((num_cst,), dtype=torch.int64)
 
@@ -178,10 +180,11 @@ class CSP_Data:
             tup_idx=tup_idx,
             val_idx=val_idx,
             cst_type=cst_type,
+            cst_weights=cst_weights,
         )
         self.add_constraint_data_(cst_data, f'{arity}_sampled')
 
-    def add_all_different_constraint_data(self, var_idx):
+    def add_all_different_constraint_data(self, var_idx, cst_weights):
         num_cst, num_var = var_idx.shape
         cst_idx = torch.repeat_interleave(torch.arange(num_cst), num_var, dim=0)
         var_idx = var_idx.flatten()
@@ -189,7 +192,8 @@ class CSP_Data:
         cst_data = Constraint_Data_All_Diff(
             csp_data=self,
             cst_idx=cst_idx,
-            var_idx=var_idx
+            var_idx=var_idx,
+            cst_weights=cst_weights,
         )
         self.add_constraint_data_(cst_data, f'all_diff')
 
@@ -276,9 +280,27 @@ class CSP_Data:
     def count_unsat(self, assignment_one_hot):
         unsat = 1.0 - self.constraint_is_sat(assignment_one_hot).float()
         num_unsat = scatter_sum(unsat, self.cst_batch, dim=0, dim_size=self.batch_size)
-        return num_unsat
+        return num_unsat # (25,1)
 
     def count_sat(self, assignment_one_hot):
         sat = self.constraint_is_sat(assignment_one_hot).float()
         sat = scatter_sum(sat, self.cst_batch, dim=0, dim_size=self.batch_size)
         return sat
+
+    def get_all_cst_weights(self):
+        weights = torch.cat([c.cst_weights for k, c in self.constraints.items()], dim=0)
+        weights = weights.reshape(-1, 1)
+        return weights
+
+    def get_batch_weights(self):
+        return scatter_sum(self.get_all_cst_weights(), self.cst_batch, dim=0, dim_size=self.batch_size)
+
+    def get_f_val(self, assignment_one_hot):
+        is_sat = self.constraint_is_sat(assignment_one_hot)
+        weights = self.get_all_cst_weights()
+        # print('weights shape:', weights.shape)
+
+        f_val = scatter_sum(weights * is_sat, self.cst_batch, dim=0, dim_size=self.batch_size)
+        # print(f_val, f_val.shape)
+
+        return f_val

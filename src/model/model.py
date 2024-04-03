@@ -58,7 +58,8 @@ class ANYCSP(Module):
         assignment, _ = data.hard_assign_sample(logits)
         cst_sat = data.constraint_is_sat(assignment, update_LE=True)
         num_unsat = scatter_sum(1.0 - cst_sat, data.cst_batch, dim=0, dim_size=data.batch_size)
-        return assignment, num_unsat
+        f_val = data.get_f_val(assignment)
+        return assignment, num_unsat, f_val
 
     def update_assignment(self, data, logits, assignment):
         if self.sampling == 'local':
@@ -67,7 +68,8 @@ class ANYCSP(Module):
             assignment, log_prob = data.hard_assign_sample(logits)
         cst_sat = data.constraint_is_sat(assignment, update_LE=True)
         num_unsat = scatter_sum(1.0 - cst_sat, data.cst_batch, dim=0, dim_size=data.batch_size)
-        return assignment, num_unsat, log_prob
+        f_val = data.get_f_val(assignment)
+        return assignment, num_unsat, log_prob, f_val
 
     def forward(
             self,
@@ -84,7 +86,7 @@ class ANYCSP(Module):
         data.init_adj()
 
         # initialize first assignment and states
-        assignment, num_unsat = self.init_assignment(data)
+        assignment, num_unsat, f_val = self.init_assignment(data)
         h_val = self.h_val_init.tile(data.num_val, 1)
 
         data.best_num_unsat = num_unsat.min(dim=1)[0]
@@ -94,6 +96,7 @@ class ANYCSP(Module):
         assignment_list = [value_assignment.view(-1, 1)]
         num_unsat_list = [data.best_num_unsat.view(-1, 1)]
         log_prob_list = []
+        f_val_list = [f_val.view(-1, 1)]
 
         opt = data.best_num_unsat.min()
         data.opt_step = 0
@@ -116,13 +119,15 @@ class ANYCSP(Module):
             logits = self.policy(h_val)
 
             # sample next assignment
-            assignment, num_unsat, log_prob = self.update_assignment(data, logits, assignment)
+            assignment, num_unsat, log_prob, f_val = self.update_assignment(data, logits, assignment)
             data.num_steps = s + 1
 
             # update all kinds of metrics...
             num_unsat, best_assign = num_unsat.min(dim=1)
             data.best_num_unsat = torch.minimum(data.best_num_unsat, num_unsat)
             cur_opt = data.best_num_unsat.min()
+
+            f_val_list.append(f_val.view(-1, 1))
 
             if return_log_probs:
                 log_prob_list.append(log_prob.view(-1, 1))
@@ -146,6 +151,8 @@ class ANYCSP(Module):
             if timeout is not None and timeout < time:
                 break
 
+        data.all_f_val = torch.cat(f_val_list, dim=1)
+
         if return_log_probs:
             data.all_log_probs = torch.cat(log_prob_list, dim=1)
         if return_all_assignments:
@@ -154,4 +161,8 @@ class ANYCSP(Module):
             data.all_num_unsat = torch.cat(num_unsat_list, dim=1)
         if keep_time:
             data.total_time = time
+
+        # print("all_f_val shape:", data.all_f_val.shape) --> (25,6)
+        # print("all_num_unsat shape:", data.all_num_unsat.shape) --> (25,6)
+
         return data

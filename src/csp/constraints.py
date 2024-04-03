@@ -40,11 +40,12 @@ class Constraint_Data_Base:
 
 class Constraint_Data(Constraint_Data_Base):
 
-    def __init__(self, csp_data, cst_idx, tup_idx, val_idx, cst_type, cst_edges=None, cst_var_edges=None, lit_edge_map=None, batch=None):
+    def __init__(self, csp_data, cst_idx, tup_idx, val_idx, cst_type, cst_weights, cst_edges=None, cst_var_edges=None, lit_edge_map=None, batch=None):
         self.cst_idx = cst_idx
         self.tup_idx = tup_idx
         self.val_idx = val_idx
         self.cst_type = cst_type
+        self.cst_weights = cst_weights
 
         if cst_var_edges is None:
             cst_var_edges = torch.unique(torch.stack([cst_idx[tup_idx], csp_data.var_idx[self.val_idx]], dim=0), dim=1)
@@ -97,13 +98,15 @@ class Constraint_Data(Constraint_Data_Base):
 
     @staticmethod
     def collate(batch_list, merged_csp_data):
-        cst_idx, tup_idx, val_idx, cst_type, batch_idx = [], [], [], [], []
+        cst_idx, tup_idx, val_idx, cst_type, cst_weights, batch_idx = [], [], [], [], [], []
         cst_off, tup_off, edge_off = 0, 0, 0
         cst_val_edges, cst_var_edges, lit_edge_map = [], [], []
         for cst_data, var_off, val_off, i in batch_list:
             cst_idx.append(cst_data.cst_idx + cst_off)
             tup_idx.append(cst_data.tup_idx + tup_off)
             val_idx.append(cst_data.val_idx + val_off)
+
+            cst_weights.append(cst_data.cst_weights)
 
             cur_cst_val_edges = cst_data.cst_edges.clone()
             cur_cst_val_edges[0] += cst_off
@@ -128,6 +131,7 @@ class Constraint_Data(Constraint_Data_Base):
         tup_idx = torch.cat(tup_idx, dim=0)
         val_idx = torch.cat(val_idx, dim=0)
         cst_type = torch.cat(cst_type, dim=0)
+        cst_weights = torch.cat(cst_weights, dim=0)
         batch_idx = torch.cat(batch_idx, dim=0)
         cst_val_edges = torch.cat(cst_val_edges, dim=1)
         cst_var_edges = torch.cat(cst_var_edges, dim=1)
@@ -139,6 +143,7 @@ class Constraint_Data(Constraint_Data_Base):
             tup_idx=tup_idx,
             val_idx=val_idx,
             cst_type=cst_type,
+            cst_weights=cst_weights,
             batch=batch_idx,
             cst_edges=cst_val_edges,
             cst_var_edges=cst_var_edges,
@@ -171,9 +176,10 @@ class Constraint_Data(Constraint_Data_Base):
 
 class Constraint_Data_All_Diff(Constraint_Data_Base):
 
-    def __init__(self, csp_data, cst_idx, var_idx, cst_edges=None, cst_var_edges=None, count_edge_map=None, batch=None):
+    def __init__(self, csp_data, cst_idx, var_idx, cst_weights, cst_edges=None, cst_var_edges=None, count_edge_map=None, batch=None):
         self.cst_idx = cst_idx
         self.var_idx = var_idx
+        self.cst_weights = cst_weights
 
         cst_var_dom_size = csp_data.domain_size[var_idx]
         self.cst_dom_size = scatter_max(cst_var_dom_size, cst_idx, dim=0)[0]
@@ -216,12 +222,13 @@ class Constraint_Data_All_Diff(Constraint_Data_Base):
 
     @staticmethod
     def collate(batch_list, merged_csp_data):
-        cst_idx, var_idx, batch_idx = [], [], []
+        cst_idx, var_idx, cst_weights, batch_idx = [], [], [], []
         cst_off, edge_off = 0, 0
         cst_val_edges, cst_var_edges, count_edge_map = [], [], []
         for cst_data, var_off, val_off, i in batch_list:
             cst_idx.append(cst_data.cst_idx + cst_off)
             var_idx.append(cst_data.var_idx + var_off)
+            cst_weights.append(cst_data.cst_weights)
 
             cur_cst_val_edges = cst_data.cst_edges.clone()
             cur_cst_val_edges[0] += cst_off
@@ -242,6 +249,7 @@ class Constraint_Data_All_Diff(Constraint_Data_Base):
 
         cst_idx = torch.cat(cst_idx, dim=0)
         var_idx = torch.cat(var_idx, dim=0)
+        cst_weights = torch.cat(cst_weights, dim=0)
         batch_idx = torch.cat(batch_idx, dim=0)
         cst_val_edges = torch.cat(cst_val_edges, dim=1)
         cst_var_edges = torch.cat(cst_var_edges, dim=1)
@@ -251,6 +259,7 @@ class Constraint_Data_All_Diff(Constraint_Data_Base):
             csp_data=merged_csp_data,
             cst_idx=cst_idx,
             var_idx=var_idx,
+            cst_weights=cst_weights,
             batch=batch_idx,
             cst_edges=cst_val_edges,
             cst_var_edges=cst_var_edges,

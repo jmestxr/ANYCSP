@@ -7,6 +7,8 @@ import networkx as nx
 import torch
 import cnfgen
 
+import random
+
 class ResAlloc_Generator:
     def __init__(self, n1, n2, n3, n4, num_phys):
         self.n1 = n1 # number of days
@@ -15,28 +17,87 @@ class ResAlloc_Generator:
         self.n4 = n4 # number of vacancies (physicians needed in one period)
         self.num_phys = num_phys # number of physicians available for allocation
 
+        self.num_var = self.n1 * self.n2 * self.n3 * self.n4 # number of units Mi
+
+
+    def generate_unary_constraints(self, csp_data):
+        # csp_data.add_uniform_constraint_data(True, torch.tensor([[0], [0]]), torch.tensor([[[5]], [[10]]]), torch.tensor([1, 2]))\
+        # [[[5],[10]]]
+
+        min_weight = 1
+        max_weight = 3
+
+
+        # Parameters:
+        threshold_pct = 0.5 # Set minimum % of variables having unary constraints to 20%
+        num_cst = int(0.5 * self.num_phys) # number of unary constraints per variable
+        num_vars_with_unary_constraints = np.random.randint(int(threshold_pct * self.num_var), self.num_var + 1)
+        # num_vars_with_unary_constraints = int(threshold_pct * self.num_var)
+
+        random_vars_with_unary_constraints = random.sample(range(self.num_var), num_vars_with_unary_constraints)
+        var_idx = torch.cat([torch.full((num_cst,), i) for i in random_vars_with_unary_constraints])
+
+        val_idx = []
+        for _ in range(num_vars_with_unary_constraints): 
+            val_idx.append(random.sample(range(self.num_phys), num_cst))
+
+        val_idx = torch.tensor(val_idx).reshape(num_vars_with_unary_constraints, num_cst, 1)
+        # val_idx = torch.arange(self.num_phys).tile(num_cst).reshape(num_cst, self.num_phys, 1)
+
+        cst_weights = torch.randint(low=min_weight, high=max_weight+1, size=(num_vars_with_unary_constraints,))
+
+        csp_data.add_uniform_constraint_data(True, var_idx, val_idx, cst_weights)
+
+
+        # for var_idx in var_idxs:
+        #     var_idx = torch.full((num_cst, 1), var_idx)
+
+        #     val_idx = list(range(self.num_phys))
+        #     random.shuffle(val_idx)
+        #     val_idx = torch.tensor(val_idx[:num_cst]).reshape((num_cst, 1, 1))
+        #     # val_idx = torch.randint(low=0, high=self.num_phys, size=(num_cst,)).reshape((num_cst, 1, 1))
+        #     cst_weights = torch.randint(low=min_weight, high=max_weight+1, size=(num_cst,))
+
+        #     csp_data.add_uniform_constraint_data(True, var_idx, val_idx, cst_weights)
+
+            
+
+
     def create_random_instance(self):
-        num_var = self.n1 * self.n2 * self.n3 * self.n4 # number of units Mi
 
         # To model unary constraints, generate random domain for each unit (set of physicians that can be allocated to each unit Mi)
-        domains = [torch.sort(torch.unique(torch.randint(0, self.num_phys, size=(torch.randint(1, self.num_phys + 1, size=(1,)).item(),))))[0] for _ in range(num_var)]
-        domain_sizes = torch.tensor([len(dom) for dom in domains])
-        domains = torch.cat(domains)
+        # domains = [torch.sort(torch.unique(torch.randint(0, self.num_phys, size=(torch.randint(1, self.num_phys + 1, size=(1,)).item(),))))[0] for _ in range(num_var)]
+        # domain_sizes = torch.tensor([len(dom) for dom in domains])
+        # domains = torch.cat(domains)
 
-        data = CSP_Data(num_var=num_var, domain_size=domain_sizes, domain=domains)
+        domains = torch.tile(torch.arange(self.num_phys), (self.num_var,))
+        domain_sizes = torch.full((self.num_var,), self.num_phys)
 
-        # Add 100 AllDiff constraints on random units (each constraint has 2 participating variables)
-        num_cst = 100
+        data = CSP_Data(num_var=self.num_var, domain_size=domain_sizes, domain=domains)
+
+        self.generate_unary_constraints(data)
+
+
+        # Add 100 AllDiff binary constraints on random units
+        num_cst = 300
         var_idx = []
 
         while len(var_idx) < num_cst:
-            new_pair = torch.randint(0, num_var, size=(2,))
+            new_pair = torch.randint(0, self.num_var, size=(2,))
             if all((new_pair != row).any() for row in var_idx):
                 var_idx.append(new_pair)
 
         var_idx = torch.stack(var_idx)
 
-        data.add_all_different_constraint_data(var_idx)
+        # generate random constraint weights
+        # multiplier = 100 # need to tune this multiplier...
+        # cst_weights = torch.rand(num_cst) * multiplier
+        # min_weight = 1
+        # max_weight = 3
+        # cst_weights = torch.randint(low=min_weight, high=max_weight+1, size=(num_cst,))
+        cst_weights = torch.full((num_cst,), 1)
+
+        data.add_all_different_constraint_data(var_idx, cst_weights)
 
         return data
 
