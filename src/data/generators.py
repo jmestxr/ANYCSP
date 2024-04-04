@@ -62,7 +62,7 @@ class ResAlloc_Generator:
 
     def generate_multiple_constraints(self, csp_data):
         # Add 100 AllDiff binary constraints on random units
-        num_cst = 100
+        num_cst = 200
         var_idx = []
 
         while len(var_idx) < num_cst:
@@ -95,7 +95,7 @@ class ResAlloc_Generator:
 
         data = CSP_Data(num_var=self.num_var, domain_size=domain_sizes, domain=domains)
 
-        # self.generate_unary_constraints(data)
+        self.generate_unary_constraints(data)
 
         self.generate_multiple_constraints(data)
 

@@ -1,5 +1,5 @@
 {
-    "hidden_dim": 128,
+    "hidden_dim": 10,
     "aggr_val2cst": "sum",
     "aggr_cst2val": "sum",
     "aggr_val2var": "sum",
