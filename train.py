@@ -52,7 +52,7 @@ def train_epoch():
     total_csts = 0
     total_unsats = 0
 
-    for data in tqdm(train_loader, total=len(train_loader), disable=args.no_bar, desc=f'Training Epoch {epoch+1}'):
+    for data in tqdm(train_loader, total=len(train_loader), disable=args.no_bar, desc=f'Training Epoch {epoch+1} Global Step {model.global_step}'):
         opt.zero_grad()
         data.to(device)
 
@@ -101,8 +101,10 @@ def train_epoch():
             model.save_model(name=f'checkpoint_{model.global_step}')
 
         model.global_step += 1
-    print(f'Total unsatisfied constraints: {torch.sum(total_unsats)}')
-    print(f'Total constraints: {total_csts}')
+
+    if epoch % 5 == 0:
+        print(f'Total unsatisfied constraints: {torch.sum(total_unsats)}')
+        print(f'Total constraints: {total_csts}')
     
 
 def validate():
@@ -153,7 +155,7 @@ if __name__ == '__main__':
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    if args.from_last:
+    if args.from_last: #if user chooses to run from existing last checkpoint,
         args.pretrained_dir = args.model_dir
         args.config = os.path.join(args.model_dir, 'config.json')
 
@@ -162,7 +164,7 @@ if __name__ == '__main__':
     if args.pretrained_dir is None:
         model = ANYCSP(args.model_dir, config)
     else:
-        model = ANYCSP.load(args.pretrained_dir, f'last')
+        model = ANYCSP.load_model(args.pretrained_dir, f'last')
         model.model_dir = args.model_dir
 
     model.to(device)
