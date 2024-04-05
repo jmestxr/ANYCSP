@@ -127,8 +127,7 @@ class RESALLOC_Generator:
 
 class RESALLOC_Test_Generator:
     def __init__(self):
-        self.min_weight = 1
-        self.max_weight = 10
+        pass
 
 
     def get_1d_index(self, idx_3d, p, h):
