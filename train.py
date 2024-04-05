@@ -49,8 +49,10 @@ def train_epoch():
     unsat_list = []
     unsat_ratio_list = []
     solved_list = []
+    total_csts = 0
+    total_unsats = 0
 
-    for data in tqdm(train_loader, total=len(train_loader), disable=args.no_bar, desc=f'Training Epoch {epoch+1}'):
+    for data in tqdm(train_loader, total=len(train_loader), disable=args.no_bar, desc=f'Training Epoch {epoch+1} Global Step {model.global_step}'):
         opt.zero_grad()
         data.to(device)
 
@@ -75,6 +77,7 @@ def train_epoch():
 
         best_unsat = data.best_num_unsat.view(-1)
         unsat_ratio = best_unsat / data.batch_num_cst.view(-1)
+        total_csts += data.batch_num_cst.sum()
         solved = best_unsat == 0
 
         unsat_list.append(best_unsat.cpu())
@@ -83,6 +86,7 @@ def train_epoch():
 
         if (model.global_step + 1) % args.logging_steps == 0:
             unsat = torch.cat(unsat_list, dim=0)
+            total_unsats += unsat
             unsat_ratio = torch.cat(unsat_ratio_list, dim=0)
             solved = torch.cat(solved_list, dim=0)
             logger.add_scalar('Train/Loss', loss.mean(), model.global_step)
@@ -98,6 +102,10 @@ def train_epoch():
 
         model.global_step += 1
 
+    if epoch % 5 == 0:
+        print(f'Total unsatisfied constraints: {torch.sum(total_unsats)}')
+        print(f'Total constraints: {total_csts}')
+    
 
 def validate():
     model.eval()
@@ -147,7 +155,7 @@ if __name__ == '__main__':
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    if args.from_last:
+    if args.from_last: #if user chooses to run from existing last checkpoint,
         args.pretrained_dir = args.model_dir
         args.config = os.path.join(args.model_dir, 'config.json')
 
@@ -156,7 +164,7 @@ if __name__ == '__main__':
     if args.pretrained_dir is None:
         model = ANYCSP(args.model_dir, config)
     else:
-        model = ANYCSP.load(args.pretrained_dir, f'last')
+        model = ANYCSP.load_model(args.pretrained_dir, f'last')
         model.model_dir = args.model_dir
 
     model.to(device)
@@ -196,12 +204,13 @@ if __name__ == '__main__':
         train_epoch()
 
         if val_loader is not None:
-            unsat, solved = validate()
+            if epoch % 100 == 0:
+                unsat, solved = validate()
 
-            print(f'Mean Unsat Count: {unsat:.2f}, Solved: {100 * solved:.2f}%')
-            if unsat < best_unsat:
-                model.save_model(name='best')
-                best_unsat = unsat
+                print(f'Mean Unsat Count: {unsat:.2f}, Solved: {100 * solved:.2f}%')
+                if unsat < best_unsat:
+                    model.save_model(name='best')
+                    best_unsat = unsat
 
         model.save_model(name='last')
         save_opt_states(model.model_dir)

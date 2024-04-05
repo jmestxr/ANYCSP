@@ -51,6 +51,7 @@ class ANYCSP(Module):
         state_dict = torch.load(os.path.join(model_dir, f'{name}.pkl'))
         model.load_state_dict(state_dict, strict=False)
         model.global_step = state_dict['global_step']
+        print(f'Global step is now: {model.global_step}')
         return model
 
     def init_assignment(self, data):
