@@ -42,7 +42,7 @@ class RESALLOC_Generator:
         # csp_data.add_uniform_constraint_data(True, torch.tensor([[0], [0]]), torch.tensor([[[5]], [[10]]]), torch.tensor([1, 2]))\
         # [[[5],[10]]]
 
-        threshold_pct = 0.005 # set max % of variables each physician can specify, to limit training time
+        threshold_pct = 0.25 # set max % of variables each physician can specify, to limit training time
 
         for phy in range(num_phys):
             num_cst = np.random.randint(0, int(threshold_pct * num_var) + 1)
@@ -63,7 +63,7 @@ class RESALLOC_Generator:
     def add_type1_multiple_constraint_(self, csp_data, num_var):
         # AllDiff(X1, X2, ... , Xn)
 
-        threshold_pct = 0.005 # set max % of variables that can have this multiple constraint, to limit training time :(
+        threshold_pct = 0.5 # set max % of variables that can have this multiple constraint, to limit training time :(
 
         n = np.random.randint(0, int(threshold_pct * num_var) + 1)
 
@@ -81,7 +81,7 @@ class RESALLOC_Generator:
     def add_type2_multiple_constraint_(self, csp_data, num_var, num_phys):
          # ~(X1 = X2 = ... = Xn)
 
-        threshold_pct = 0.005 # set max % of variables that can have this multiple constraint, to limit training time :(
+        threshold_pct = 0.5 # set max % of variables that can have this multiple constraint, to limit training time :(
 
         n = np.random.randint(0, int(threshold_pct * num_var) + 1)
 
@@ -98,7 +98,7 @@ class RESALLOC_Generator:
 
 
     def generate_multiple_constraints(self, csp_data, num_var, num_phys):
-        threshold_pct = 0.01
+        threshold_pct = 0.25
 
         num_type1 = np.random.randint(1, int(threshold_pct * num_var) + 1)
         num_type2 = np.random.randint(1, int(threshold_pct * num_var) + 1)

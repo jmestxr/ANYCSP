@@ -165,3 +165,7 @@ class Generator_Dataset(Dataset):
     def __getitem__(self, item):
         i = np.random.randint(self.num_gen)
         return self.generators[i].create_random_instance()
+
+    def get_data(self):
+        i = np.random.randint(self.num_gen)
+        return self.generators[i].create_random_instance()
