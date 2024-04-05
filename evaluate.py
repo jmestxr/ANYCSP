@@ -117,10 +117,12 @@ if __name__ == '__main__':
     num_solved = 0
     total_time = 0.0
     num_total = len(dataset)
+    mean_pct_unsat = 0
 
     sample_no = 0
 
     for data in dataset:
+        print(len(dataset))
         sample_no += 1
 
         print(f'Testing RESALLOC Sample {sample_no}:')
@@ -134,7 +136,6 @@ if __name__ == '__main__':
                     return_log_probs=False,
                     stop_early=True,
                     return_all_unsat=False,
-                    verbose=args.verbose,
                     keep_time=True,
                     timeout=args.timeout
                 )
@@ -142,16 +143,18 @@ if __name__ == '__main__':
         best_per_run = data.best_num_unsat.cpu().detach().numpy()
         mean_best = best_per_run.mean()
         best = best_per_run.min()
+        pct_unsat = 100 * best / data.batch_num_cst
+        mean_pct_unsat += pct_unsat
         solved = best == 0
         num_solved += int(solved)
         total_time += data.opt_time
 
         print(
             f'Sample {sample_no}: {"Solved" if solved else "Unsolved"}, '
-            f'Num Unsat: {int(best)}, '
+            f'% Unsat: {pct_unsat}%'
             f'Steps: {data.num_steps}, '
             f'Opt Time: {data.opt_time:.2f}s, '
             f'Opt Step: {data.opt_step}'
         )
 
-    print(f'Solved {100 * num_solved / num_total:.2f}%, Average Time: {total_time / num_total:.2f}s')
+    print(f'Solved {100 * num_solved / num_total:.2f}%, Mean % Unsat: {mean_pct_unsat / num_total}%, Average Time: {total_time / num_total:.2f}s')
