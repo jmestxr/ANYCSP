@@ -112,39 +112,46 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
-    test_data = dataset_from_config(config['test_data'], num_samples=100)
-    test_loader = DataLoader(
-        test_data,
-        batch_size=config['test_batch_size'],
-        num_workers=args.num_workers,
-        collate_fn=CSP_Data.collate,
-    )
+    dataset = dataset_from_config(config['test_data'], num_samples=100)
 
-    total_unsat = 0
-    total_solved = 0
-    total_count = 0
+    num_solved = 0
+    total_time = 0.0
+    num_total = len(dataset)
 
-    for data in tqdm(test_loader, disable=args.no_bar, desc=f'Testing on RESALLOC'):
+    sample_no = 0
+
+    for data in dataset:
+        sample_no += 1
+
+        print(f'Testing RESALLOC Sample {sample_no}:')
         data.to(device)
         with torch.inference_mode():
             with torch.cuda.amp.autocast():
                 data = model(
                     data,
                     config['T_test'],
+                    return_all_assignments=False,
                     return_log_probs=False,
-                    return_all_unsat=True,
-                    return_all_assignments=False
+                    stop_early=True,
+                    return_all_unsat=False,
+                    verbose=args.verbose,
+                    keep_time=True,
+                    timeout=args.timeout
                 )
 
-        best_unsat = data.best_num_unsat.view(-1)
-        total_unsat += best_unsat.float().sum().cpu().numpy()
-        total_solved += (best_unsat == 0).float().sum().cpu().numpy()
-        total_count += data.batch_size
+        best_per_run = data.best_num_unsat.cpu().detach().numpy()
+        mean_best = best_per_run.mean()
+        best = best_per_run.min()
+        solved = best == 0
+        num_solved += int(solved)
+        total_time += data.opt_time
 
+        print(
+            f'Sample {sample_no}: {"Solved" if solved else "Unsolved"}, '
+            f'Num Unsat: {int(best)}, '
+            f'Steps: {data.num_steps}, '
+            f'Opt Time: {data.opt_time:.2f}s, '
+            f'Opt Step: {data.opt_step}'
+        )
 
-    unsat = total_unsat / total_count
-    solved = total_solved / total_count
-    logger.add_scalar('Test/Solved_Ratio', solved, model.global_step)
-    logger.add_scalar('Test/Unsat_Count', unsat, model.global_step)
-
-    print(f'Mean Unsat Count: {unsat:.2f}, Solved: {100 * solved:.2f}%')
+    print(f'Solved {100 * num_solved / num_total:.2f}%, Average Time: {total_time / num_total:.2f}s')
