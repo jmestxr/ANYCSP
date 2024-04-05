@@ -22,5 +22,9 @@
     "val_data": {
         "RESALLOC": {
         }
+    },
+    "test_data": {
+        "RESALLOC_Test": {
+        }
     }
 }
