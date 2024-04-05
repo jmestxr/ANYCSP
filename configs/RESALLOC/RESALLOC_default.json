@@ -17,20 +17,10 @@
     "val_batch_size": 50,
     "train_data": {
         "RESALLOC": {
-            "n1": 31,
-            "n2": 2,
-            "n3": 5,
-            "n4": 5,
-            "num_phys": 50
         }
     },
     "val_data": {
         "RESALLOC": {
-            "n1": 31,
-            "n2": 2,
-            "n3": 5,
-            "n4": 5,
-            "num_phys": 50
         }
     }
 }
