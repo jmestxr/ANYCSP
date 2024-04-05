@@ -112,17 +112,18 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
-    dataset = dataset_from_config(config['test_data'], num_samples=100)
+    dataset = dataset_from_config(config['test_data'])
+    num_samples = 100
 
     num_solved = 0
     total_time = 0.0
-    num_total = len(dataset)
+    num_total = num_samples
     mean_pct_unsat = 0
 
     sample_no = 0
 
-    for data in dataset:
-        print(len(dataset))
+    for i in range(num_samples):
+        data = dataset.get_data()
         sample_no += 1
 
         print(f'Testing RESALLOC Sample {sample_no}:')
@@ -151,7 +152,7 @@ if __name__ == '__main__':
 
         print(
             f'Sample {sample_no}: {"Solved" if solved else "Unsolved"}, '
-            f'% Unsat: {pct_unsat}%'
+            f'% Unsat: {pct_unsat}% '
             f'Steps: {data.num_steps}, '
             f'Opt Time: {data.opt_time:.2f}s, '
             f'Opt Step: {data.opt_step}'
