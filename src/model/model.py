@@ -59,7 +59,8 @@ class ANYCSP(Module):
         cst_sat = data.constraint_is_sat(assignment, update_LE=True)
         num_unsat = scatter_sum(1.0 - cst_sat, data.cst_batch, dim=0, dim_size=data.batch_size)
         f_val = data.get_f_val(assignment)
-        return assignment, num_unsat, f_val
+        solved_ratio_per_weight = data.get_solved_ratio_per_weight(assignment)
+        return assignment, num_unsat, f_val, solved_ratio_per_weight
 
     def update_assignment(self, data, logits, assignment):
         if self.sampling == 'local':
@@ -69,7 +70,8 @@ class ANYCSP(Module):
         cst_sat = data.constraint_is_sat(assignment, update_LE=True)
         num_unsat = scatter_sum(1.0 - cst_sat, data.cst_batch, dim=0, dim_size=data.batch_size)
         f_val = data.get_f_val(assignment)
-        return assignment, num_unsat, log_prob, f_val
+        solved_ratio_per_weight = data.get_solved_ratio_per_weight(assignment)
+        return assignment, num_unsat, log_prob, f_val, solved_ratio_per_weight
 
     def forward(
             self,
@@ -86,7 +88,7 @@ class ANYCSP(Module):
         data.init_adj()
 
         # initialize first assignment and states
-        assignment, num_unsat, f_val = self.init_assignment(data)
+        assignment, num_unsat, f_val, solved_ratio_per_weight = self.init_assignment(data)
         h_val = self.h_val_init.tile(data.num_val, 1)
 
         data.best_num_unsat = num_unsat.min(dim=1)[0]
@@ -97,6 +99,7 @@ class ANYCSP(Module):
         num_unsat_list = [data.best_num_unsat.view(-1, 1)]
         log_prob_list = []
         f_val_list = [f_val.view(-1, 1)]
+        best_solved_ratio_per_weight = solved_ratio_per_weight
 
         opt = data.best_num_unsat.min()
         data.opt_step = 0
@@ -119,7 +122,7 @@ class ANYCSP(Module):
             logits = self.policy(h_val)
 
             # sample next assignment
-            assignment, num_unsat, log_prob, f_val = self.update_assignment(data, logits, assignment)
+            assignment, num_unsat, log_prob, f_val, solved_ratio_per_weight = self.update_assignment(data, logits, assignment)
             data.num_steps = s + 1
 
             # update all kinds of metrics...
@@ -129,6 +132,8 @@ class ANYCSP(Module):
 
             f_val_list.append(f_val.view(-1, 1))
 
+            best_solved_ratio_per_weight = torch.max(best_solved_ratio_per_weight, solved_ratio_per_weight)
+            
             if return_log_probs:
                 log_prob_list.append(log_prob.view(-1, 1))
             if return_all_unsat:
@@ -152,6 +157,8 @@ class ANYCSP(Module):
                 break
 
         data.all_f_val = torch.cat(f_val_list, dim=1)
+
+        data.best_solved_ratio_per_weight = best_solved_ratio_per_weight
 
         if return_log_probs:
             data.all_log_probs = torch.cat(log_prob_list, dim=1)

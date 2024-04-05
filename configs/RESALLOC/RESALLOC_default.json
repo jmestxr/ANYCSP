@@ -13,7 +13,7 @@
     "weight_decay": 0.0,
     "discount": 0.75,
     "reward": "improve",
-    "batch_size": 25,
+    "batch_size": 1,
     "val_batch_size": 50,
     "train_data": {
         "RESALLOC": {

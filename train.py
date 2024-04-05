@@ -49,6 +49,7 @@ def train_epoch():
     unsat_list = []
     unsat_ratio_list = []
     solved_list = []
+    solved_ratio_per_weight_list = []
 
     for data in tqdm(train_loader, total=len(train_loader), disable=args.no_bar, desc=f'Training Epoch {epoch+1}'):
         opt.zero_grad()
@@ -80,6 +81,7 @@ def train_epoch():
         unsat_list.append(best_unsat.cpu())
         unsat_ratio_list.append(unsat_ratio.cpu())
         solved_list.append(solved.cpu())
+        solved_ratio_per_weight_list.append(data.solved_ratio_per_weight.cpu())
 
         if (model.global_step + 1) % args.logging_steps == 0:
             unsat = torch.cat(unsat_list, dim=0)
@@ -89,6 +91,16 @@ def train_epoch():
             logger.add_scalar('Train/Solved_Ratio', solved.float().mean(), model.global_step)
             logger.add_scalar('Train/Unsat_Count', unsat.float().mean(), model.global_step)
             logger.add_scalar('Train/Unsat_Ratio', unsat_ratio.float().mean(), model.global_step)
+
+            mean_solved_ratio_per_weight = torch.stack(solved_ratio_per_weight_list).float().mean(dim=0)
+            logger.add_scalar('Train/Solved_Ratio_Per_Weight', {
+                'w1': mean_solved_ratio_per_weight[0],
+                'w2': mean_solved_ratio_per_weight[1],
+                'w3': mean_solved_ratio_per_weight[2],
+                'w4': mean_solved_ratio_per_weight[3],
+                'w5': mean_solved_ratio_per_weight[4],
+            }, model.global_step)
+
             unsat_list = []
             unsat_ratio_list = []
             solved_list = []

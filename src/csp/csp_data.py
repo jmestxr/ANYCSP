@@ -284,6 +284,7 @@ class CSP_Data:
 
     def count_sat(self, assignment_one_hot):
         sat = self.constraint_is_sat(assignment_one_hot).float()
+        # print(sat)
         sat = scatter_sum(sat, self.cst_batch, dim=0, dim_size=self.batch_size)
         return sat
 
@@ -298,9 +299,20 @@ class CSP_Data:
     def get_f_val(self, assignment_one_hot):
         is_sat = self.constraint_is_sat(assignment_one_hot)
         weights = self.get_all_cst_weights()
-        # print('weights shape:', weights.shape)
+        # print('weights shape', weights.shape)
 
         f_val = scatter_sum(weights * is_sat, self.cst_batch, dim=0, dim_size=self.batch_size)
         # print(f_val, f_val.shape)
 
         return f_val
+
+    def get_solved_ratio_per_weight(self, assignment_one_hot):
+        is_sat = self.constraint_is_sat(assignment_one_hot).float().reshape(-1,) # 1d
+        all_cst = torch.ones(is_sat.shape[0], dtype=torch.int)
+
+        weights = torch.cat([c.cst_weights for k, c in self.constraints.items()], dim=0) # 1d
+
+        is_sat_per_weight = scatter_sum(is_sat, weights)[1:]
+        all_cst_per_weight = scatter_sum(all_cst, weights)[1:]
+
+        return is_sat_per_weight / all_cst_per_weight

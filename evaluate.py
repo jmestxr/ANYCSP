@@ -119,6 +119,7 @@ if __name__ == '__main__':
     total_time = 0.0
     num_total = num_samples
     mean_pct_unsat = 0
+    solved_ratio_per_weight_list = []
 
     sample_no = 0
 
@@ -150,12 +151,19 @@ if __name__ == '__main__':
         num_solved += int(solved)
         total_time += data.opt_time
 
+
+        solved_ratio_per_weight = data.solved_ratio_per_weight.cpu()
+        solved_ratio_per_weight_list.append(solved_ratio_per_weight)
+
         print(
             f'Sample {sample_no}: {"Solved" if solved else "Unsolved"}, '
             f'% Unsat: {pct_unsat}% '
+            f'Solved Ratio Per Weight: {solved_ratio_per_weight} '
             f'Steps: {data.num_steps}, '
             f'Opt Time: {data.opt_time:.2f}s, '
             f'Opt Step: {data.opt_step}'
         )
 
-    print(f'Solved {100 * num_solved / num_total:.2f}%, Mean % Unsat: {mean_pct_unsat / num_total}%, Average Time: {total_time / num_total:.2f}s')
+    mean_solved_ratio_per_weight = torch.stack(solved_ratio_per_weight_list).float().mean(dim=0)
+
+    print(f'Solved {100 * num_solved / num_total:.2f}%, Mean % Unsat: {mean_pct_unsat / num_total}%, Mean Solved Ratio Per Weight: {mean_solved_ratio_per_weight}, Average Time: {total_time / num_total:.2f}s')
