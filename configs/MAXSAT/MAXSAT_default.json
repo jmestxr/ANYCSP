@@ -6,6 +6,7 @@
     "sampling": "global",
     "T_train": 40,
     "T_val": 200,
+    "T_test": 10000,
     "epochs": 500,
     "epoch_steps": 1000,
     "lr": 5e-06,
@@ -15,6 +16,7 @@
     "reward": "improve",
     "batch_size": 25,
     "val_batch_size": 25,
+    "test_batch_size": 1,
     "train_data": {
         "KSAT": {
             "min_k": 3,
@@ -39,12 +41,7 @@
         }
     },
     "test_data": {
-        "RESALLOC": {
-            "n1": 31,
-            "n2": 2,
-            "n3": 10,
-            "n4": 5,
-            "num_phys": 50
+        "RESALLOC_Test": {
         }
     }
 }

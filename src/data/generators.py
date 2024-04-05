@@ -6,40 +6,291 @@ import numpy as np
 import networkx as nx
 import torch
 import cnfgen
+import random
 
-class ResAlloc_Generator:
-    def __init__(self, n1, n2, n3, n4, num_phys):
-        self.n1 = n1 # number of days
-        self.n2 = n2 # number of periods
-        self.n3 = n3 # number of health units
-        self.n4 = n4 # number of vacancies (physicians needed in one period)
-        self.num_phys = num_phys # number of physicians available for allocation
+class RESALLOC_Generator:
+    def __init__(self):
+        pass
+
+    def get_1d_index(self, idx_3d, p, h):
+        i, j, k = idx_3d
+        return i * (p * h) + j * (h) + k
+
+    def generate_mandatory_constraints(self, csp_data, d, p, h):
+        # No physician cannot be allocated twice in the same (day, period)
+        # Note: This is a type 1 multiple-ary constraint
+
+        var_idx = []
+
+        for day in range(d):
+            for period in range(p):
+                vars = []
+                for health_unit in range(h):
+                    vars.append(self.get_1d_index((day, period, health_unit), p, h))
+                var_idx.append(vars)
+        
+        num_cst = len(var_idx)
+        var_idx = torch.tensor(var_idx)
+
+        csp_data.add_all_different_constraint_data(var_idx)
+
+
+    def generate_unary_constraints(self, csp_data, num_var, num_phys):
+        # csp_data.add_uniform_constraint_data(True, torch.tensor([[0], [0]]), torch.tensor([[[5]], [[10]]]), torch.tensor([1, 2]))\
+        # [[[5],[10]]]
+
+        threshold_pct = 0.005 # set max % of variables each physician can specify, to limit training time
+
+        for phy in range(num_phys):
+            num_cst = np.random.randint(0, int(threshold_pct * num_var) + 1)
+
+            if num_cst == 0:
+                return
+
+            var_idx = random.sample(range(num_var), num_cst)
+            var_idx = torch.tensor(var_idx).reshape(num_cst, 1)
+
+            val_idx = torch.full((num_cst, 1, 1), phy)
+
+            csp_data.add_uniform_constraint_data(True, var_idx, val_idx)
+
+
+    def add_type1_multiple_constraint_(self, csp_data, num_var):
+        # AllDiff(X1, X2, ... , Xn)
+
+        threshold_pct = 0.005 # set max % of variables that can have this multiple constraint, to limit training time :(
+
+        n = np.random.randint(0, int(threshold_pct * num_var) + 1)
+
+        if n == 0 or n == 1:
+            return
+
+        random_vars = random.sample(range(num_var), n)
+
+        num_cst = 1
+        var_idx = torch.tensor(random_vars).reshape(1, n)
+
+        csp_data.add_all_different_constraint_data(var_idx)
+
+    def add_type2_multiple_constraint_(self, csp_data, num_var, num_phys):
+         # ~(X1 = X2 = ... = Xn)
+
+        threshold_pct = 0.005 # set max % of variables that can have this multiple constraint, to limit training time :(
+
+        n = np.random.randint(0, int(threshold_pct * num_var) + 1)
+
+        if n == 0 or n == 1:
+            return
+
+        random_vars = random.sample(range(num_var), n)
+
+        num_cst = 1
+        var_idx = torch.arange(n).reshape(num_cst, n)
+        val_idx = torch.arange(num_phys).unsqueeze(1).repeat(1, n).unsqueeze(0)
+
+        csp_data.add_uniform_constraint_data(True, var_idx, val_idx)
+
+
+    def generate_multiple_constraints(self, csp_data, num_var, num_phys):
+        threshold_pct = 0.01
+
+        num_type1 = np.random.randint(1, int(threshold_pct * num_var) + 1)
+        num_type2 = np.random.randint(1, int(threshold_pct * num_var) + 1)
+        
+        for _ in range(num_type1):
+            self.add_type1_multiple_constraint_(csp_data, num_var)
+
+        for _ in range(num_type2):
+            self.add_type2_multiple_constraint_(csp_data, num_var, num_phys)
+            
 
     def create_random_instance(self):
-        num_var = self.n1 * self.n2 * self.n3 * self.n4 # number of units Mi
+        d = 31 # number of days = 31
+        p = 2 # number of periods = 2
+        h = 5 # number of health units = 5
+        num_phys = 35 # number of physicians available for allocation = 35
+        num_var = d * p * h # number of units Mi
 
-        # To model unary constraints, generate random domain for each unit (set of physicians that can be allocated to each unit Mi)
-        domains = [torch.sort(torch.unique(torch.randint(0, self.num_phys, size=(torch.randint(1, self.num_phys + 1, size=(1,)).item(),))))[0] for _ in range(num_var)]
-        domain_sizes = torch.tensor([len(dom) for dom in domains])
-        domains = torch.cat(domains)
+        domains = torch.tile(torch.arange(num_phys), (num_var,))
+        domain_sizes = torch.full((num_var,), num_phys)
 
         data = CSP_Data(num_var=num_var, domain_size=domain_sizes, domain=domains)
 
-        # Add 100 AllDiff constraints on random units (each constraint has 2 participating variables)
-        num_cst = 100
-        var_idx = []
+        self.generate_unary_constraints(data, num_var, num_phys)
 
-        while len(var_idx) < num_cst:
-            new_pair = torch.randint(0, num_var, size=(2,))
-            if all((new_pair != row).any() for row in var_idx):
-                var_idx.append(new_pair)
+        self.generate_multiple_constraints(data, num_var, num_phys)
 
-        var_idx = torch.stack(var_idx)
-
-        data.add_all_different_constraint_data(var_idx)
+        self.generate_mandatory_constraints(data, d, p, h)
 
         return data
 
+
+class RESALLOC_Test_Generator:
+    def __init__(self):
+        self.min_weight = 1
+        self.max_weight = 10
+
+
+    def get_1d_index(self, idx_3d, p, h):
+        i, j, k = idx_3d
+
+        return i * (p * h) + j * (h) + k
+
+
+    def add_typeA_unary_constraint_(self, csp_data, phy, d, p, h):
+        # Physician cannot work on certain period
+
+        period = np.random.randint(0, p)
+
+        var_idx = []
+
+        for day in range(d):
+            for health_unit in range(h):
+                var_idx.append(self.get_1d_index((day, period, health_unit), p, h))
+
+        num_cst = len(var_idx)
+
+        var_idx = torch.tensor(var_idx).reshape(num_cst, 1)
+
+        val_idx = torch.full((num_cst, 1, 1), phy)
+
+        csp_data.add_uniform_constraint_data(True, var_idx, val_idx)
+
+
+    def add_typeB_unary_constraint_(self, csp_data, phy, d, p, h):
+        # Physician cannot work on certain day
+        
+        day = np.random.randint(0, d)
+
+        var_idx = []
+
+        for period in range(p):
+            for health_unit in range(h):
+                var_idx.append(self.get_1d_index((day, period, health_unit), p, h))
+
+        num_cst = len(var_idx)
+
+        var_idx = torch.tensor(var_idx).reshape(num_cst, 1)
+
+        val_idx = torch.full((num_cst, 1, 1), phy)
+
+        csp_data.add_uniform_constraint_data(True, var_idx, val_idx)
+
+
+    def add_typeC_unary_constraint_(self, csp_data, phy, d, p, h):
+        # Physician cannot work at certain unit on certain day on certain period
+        
+        day = np.random.randint(0, d)
+        period = np.random.randint(0, p)
+        health_unit = np.random.randint(0, h)
+
+        num_cst = 1
+
+        var_idx = torch.tensor([self.get_1d_index((day, period, health_unit), p, h)]).reshape(num_cst, 1)
+
+        val_idx = torch.full((num_cst, 1, 1), phy)
+
+        csp_data.add_uniform_constraint_data(True, var_idx, val_idx)
+
+
+    def add_type1_multiple_constraint_(self, csp_data, num_var, num_phys, d, p, h):
+        # Physician can only be allocated on at most one period in the same day
+
+        var_idx = []
+
+        for day in range(d):
+            vars = []
+            for health_unit in range(h):
+                vars.append(self.get_1d_index((day, 0, health_unit), p, h))
+                vars.append(self.get_1d_index((day, 1, health_unit), p, h))
+            var_idx.append(vars)
+
+        num_cst = len(var_idx)
+        var_idx = torch.tensor(var_idx)
+
+        csp_data.add_all_different_constraint_data(var_idx)
+
+
+    def add_type2_multiple_constraint_(self, csp_data, num_var, num_phys):
+        # No physician can work consecutive of 3 periods
+
+        num_consecutive = 3
+        
+        var_idx = torch.arange(num_var).unfold(0, num_consecutive, 1).repeat(1, num_phys)
+
+        num_cst = var_idx.shape[0]
+
+        val_idx = torch.arange(num_phys).unsqueeze(1).repeat(1, num_consecutive).unsqueeze(0).tile((num_cst, 1, 1))
+
+        csp_data.add_uniform_constraint_data(True, var_idx, val_idx)
+
+
+    def generate_unary_constraints(self, csp_data, num_phys, d, p, h):
+        # Divide physicians into 3 random subsets
+        phys = list(range(num_phys))
+        random.shuffle(phys)
+        
+        total_size = len(phys)
+        sizes = [random.randint(1, num_phys - 2) for _ in range(2)]
+        sizes.append(total_size - sum(sizes))
+
+        subsets = [phys[:sizes[0]], phys[sizes[0]:sizes[0]+sizes[1]], phys[sizes[0]+sizes[1]:]]
+
+        # Add type A
+        for phy in subsets[0]:
+            self.add_typeA_unary_constraint_(csp_data, phy, d, p, h)
+
+        # Add type B
+        for phy in subsets[1]:
+            self.add_typeB_unary_constraint_(csp_data, phy, d, p, h)
+
+        # Add type C
+        for phy in subsets[2]:
+            self.add_typeC_unary_constraint_(csp_data, phy, d, p, h)
+
+    def generate_multiple_constraints(self, csp_data, num_var, num_phys, d, p, h):
+        self.add_type1_multiple_constraint_(csp_data, num_var, num_phys, d, p, h)
+        self.add_type2_multiple_constraint_(csp_data, num_var, num_phys)
+
+
+    def generate_mandatory_constraints(self, csp_data, d, p, h):
+        # No physician cannot be allocated twice in the same (day, period)
+        # Note: This is a type 1 multiple-ary constraint
+
+        var_idx = []
+
+        for day in range(d):
+            for period in range(p):
+                vars = []
+                for health_unit in range(h):
+                    vars.append(self.get_1d_index((day, period, health_unit), p, h))
+                var_idx.append(vars)
+        
+        num_cst = len(var_idx)
+        var_idx = torch.tensor(var_idx).reshape(num_cst, h)
+
+        csp_data.add_all_different_constraint_data(var_idx)
+
+
+    def create_random_instance(self):
+        d = 31 # number of days = 31
+        p = 2 # number of periods = 2
+        h = 5 # number of health units = 5
+        num_phys = 20 # number of physicians available for allocation = 20
+        num_var = d * p * h # number of units Mi
+
+        domains = torch.tile(torch.arange(num_phys), (num_var,))
+        domain_sizes = torch.full((num_var,), num_phys)
+
+        data = CSP_Data(num_var=num_var, domain_size=domain_sizes, domain=domains)
+
+        self.generate_unary_constraints(data, num_phys, d, p, h)
+
+        self.generate_multiple_constraints(data, num_var, num_phys, d, p, h)
+
+        self.generate_mandatory_constraints(data, d, p, h)
+
+        return data
 
 
 class KSAT_Generator:
@@ -238,5 +489,6 @@ generator_dict = {
     'COL_REG': COL_REG_Generator,
     'RB': RB_Generator,
     'MC_ER': MC_ER_Generator,
-    "RESALLOC": ResAlloc_Generator
+    "RESALLOC": RESALLOC_Generator,
+    "RESALLOC_Test": RESALLOC_Test_Generator,
 }

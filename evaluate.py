@@ -112,10 +112,10 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
-    test_data = dataset_from_config(config['test_data'], num_samples=10)
+    test_data = dataset_from_config(config['test_data'], num_samples=100)
     test_loader = DataLoader(
         test_data,
-        batch_size=config['val_batch_size'],
+        batch_size=config['test_batch_size'],
         num_workers=args.num_workers,
         collate_fn=CSP_Data.collate,
     )
@@ -130,7 +130,7 @@ if __name__ == '__main__':
             with torch.cuda.amp.autocast():
                 data = model(
                     data,
-                    config['T_val'],
+                    config['T_test'],
                     return_log_probs=False,
                     return_all_unsat=True,
                     return_all_assignments=False

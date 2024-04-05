@@ -6,6 +6,7 @@
     "sampling": "global",
     "T_train": 40,
     "T_val": 200,
+    "T_test": 10000,
     "epochs": 500,
     "epoch_steps": 1000,
     "lr": 5e-06,
@@ -15,6 +16,7 @@
     "reward": "improve",
     "batch_size": 25,
     "val_batch_size": 100,
+    "test_batch_size": 1,
     "train_data": {
         "COL_ER": {
             "min_n": 50,
@@ -44,6 +46,10 @@
     "val_data": {
         "FILES": {
             "path": "data/validation/COL/*.xml"
+        }
+    },
+    "test_data": {
+        "RESALLOC_Test": {
         }
     }
 }
