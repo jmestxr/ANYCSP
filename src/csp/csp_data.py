@@ -290,7 +290,7 @@ class CSP_Data:
 
     def get_all_cst_weights(self):
         weights = torch.cat([c.cst_weights for k, c in self.constraints.items()], dim=0)
-        weights = weights.reshape(-1, 1)
+        weights = weights.reshape(-1, 1).to(device=self.device)
         return weights
 
     def get_batch_weights(self):
@@ -308,9 +308,9 @@ class CSP_Data:
 
     def get_solved_ratio_per_weight(self, assignment_one_hot):
         is_sat = self.constraint_is_sat(assignment_one_hot).float().reshape(-1,) # 1d
-        all_cst = torch.ones(is_sat.shape[0], dtype=torch.int)
+        all_cst = torch.ones(is_sat.shape[0], dtype=torch.int, device=self.device)
 
-        weights = torch.cat([c.cst_weights for k, c in self.constraints.items()], dim=0) # 1d
+        weights = torch.cat([c.cst_weights for k, c in self.constraints.items()], dim=0).to(device=self.device) # 1d
 
         is_sat_per_weight = scatter_sum(is_sat, weights)[1:]
         all_cst_per_weight = scatter_sum(all_cst, weights)[1:]

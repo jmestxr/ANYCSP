@@ -12,9 +12,9 @@ def reward_improve(data):
         
         # print(reward)
         
-        test=data.batch_num_cst.view(-1, 1) - data.all_num_unsat
-        test /= data.batch_num_cst.view(-1, 1)
-        print(test)
+        # test=data.batch_num_cst.view(-1, 1) - data.all_num_unsat
+        # test /= data.batch_num_cst.view(-1, 1)
+        # print(test)
 
         # reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat # get number of satisfied constraints (all_num_sat); [[x1], [x2], ...]
         # reward /= data.batch_num_cst.view(-1, 1) + 1.0e-8

@@ -135,7 +135,7 @@ def validate():
         total_solved += (best_unsat == 0).float().sum().cpu().numpy()
         total_count += data.batch_size
         
-        print("all_f_val:", data.all_f_val)
+        # print("all_f_val:", data.all_f_val)
 
     unsat = total_unsat / total_count
     solved = total_solved / total_count
