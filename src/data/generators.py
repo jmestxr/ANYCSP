@@ -105,10 +105,10 @@ class RESALLOC_Generator:
             
 
     def create_random_instance(self):
-        d = 31 # number of days = 31
+        d = 15 # number of days = 31
         p = 2 # number of periods = 2
-        h = 5 # number of health units = 5
-        num_phys = 35 # number of physicians available for allocation = 35
+        h = 3 # number of health units = 5
+        num_phys = 20 # number of physicians available for allocation = 20
         num_var = d * p * h # number of units Mi
 
         domains = torch.tile(torch.arange(num_phys), (num_var,))

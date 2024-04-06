@@ -7,6 +7,8 @@ def reward_improve(data):
         reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat # get number of satisfied constraints (all_num_sat)
         reward /= data.batch_num_cst.view(-1, 1) + 1.0e-8
         reward = reward - reward[:, 0].view(-1, 1)
+        print((data.batch_num_cst.view(-1, 1) - data.all_num_unsat) / data.batch_num_cst.view(-1, 1))
+        print(data.batch_num_cst)
 
         max_prior = torch.cummax(reward, dim=1)[0]
         reward[:, 1:] -= max_prior[:, :-1]
