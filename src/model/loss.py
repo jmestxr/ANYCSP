@@ -7,7 +7,7 @@ def reward_improve(data):
     # Our default reward scheme: Difference to previous best clipped at 0
     with torch.no_grad():
         batch_sum_of_weights = data.get_batch_weights()
-        reward = data.all_f_val / batch_sum_of_weights
+        reward = data.all_f_val / batch_sum_of_weights + 1.0e-8
         # reward = np.log(data.all_f_val)
         
         # print(reward)
