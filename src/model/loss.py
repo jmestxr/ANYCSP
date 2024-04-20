@@ -8,23 +8,12 @@ def reward_improve(data):
     with torch.no_grad():
         batch_sum_of_weights = data.get_batch_weights()
         reward = data.all_f_val / batch_sum_of_weights + 1.0e-8
-        # reward = np.log(data.all_f_val)
-        
-        # print(reward)
-        
-        # test=data.batch_num_cst.view(-1, 1) - data.all_num_unsat
-        # test /= data.batch_num_cst.view(-1, 1)
-        # print(test)
-
-        # reward = data.batch_num_cst.view(-1, 1) - data.all_num_unsat # get number of satisfied constraints (all_num_sat); [[x1], [x2], ...]
-        # reward /= data.batch_num_cst.view(-1, 1) + 1.0e-8
         reward = reward - reward[:, 0].view(-1, 1) # "subtractive baseline"
 
         max_prior = torch.cummax(reward, dim=1)[0]
         reward[:, 1:] -= max_prior[:, :-1]
         reward[reward < 0.0] = 0.0
         reward[:, 0] = 0.0
-        # print(reward)
         return reward
 
 

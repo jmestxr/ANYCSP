@@ -17,7 +17,7 @@
     "batch_size": 10,
     "val_batch_size": 50,
     "train_data": {
-        "RESALLOC": {
+        "RESALLOC_Test": {
         }
     },
     "val_data": {
