@@ -1,0 +1,243 @@
+Sample 1: Unsolved, % Unsat: tensor([0.0525], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 55.35s, Opt Step: 7466
+
+Sample 2: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 4642, Opt Time: 34.82s, Opt Step: 4642
+
+Sample 3: Unsolved, % Unsat: tensor([1.1089], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9817, 1.0000, 0.9938, 0.9944, 0.9936, 0.9857, 1.0000, 0.9939, 1.0000,
+        0.9979]) Steps: 10000, Opt Time: 79.06s, Opt Step: 9961
+
+Sample 4: Unsolved, % Unsat: tensor([0.5707], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9937, 0.9979, 0.9979, 1.0000, 1.0000, 0.9822, 1.0000, 1.0000,
+        0.9940]) Steps: 10000, Opt Time: 84.00s, Opt Step: 9830
+
+Sample 5: Unsolved, % Unsat: tensor([0.2277], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 0.9970, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000,
+        0.9980]) Steps: 10000, Opt Time: 68.65s, Opt Step: 9124
+
+Sample 6: Unsolved, % Unsat: tensor([0.6069], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9907, 1.0000, 0.9938,
+        1.0000]) Steps: 10000, Opt Time: 72.41s, Opt Step: 9844
+
+Sample 7: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3940, Opt Time: 32.78s, Opt Step: 3940
+
+Sample 8: Unsolved, % Unsat: tensor([0.1366], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 79.65s, Opt Step: 9483
+
+Sample 9: Unsolved, % Unsat: tensor([0.6528], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 0.9912, 0.9905, 1.0000, 1.0000, 0.9937, 0.9969,
+        1.0000]) Steps: 10000, Opt Time: 65.13s, Opt Step: 9492
+
+Sample 10: Unsolved, % Unsat: tensor([0.0911], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 72.04s, Opt Step: 9528
+
+Sample 11: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 251, Opt Time: 2.16s, Opt Step: 251
+
+Sample 12: Unsolved, % Unsat: tensor([1.0613], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9905, 0.9958, 1.0000, 0.9920, 0.9899, 1.0000, 1.0000, 1.0000, 0.9907,
+        0.9876]) Steps: 10000, Opt Time: 80.71s, Opt Step: 9554
+
+Sample 13: Unsolved, % Unsat: tensor([0.2816], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 0.9958, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000,
+        0.9944]) Steps: 10000, Opt Time: 66.39s, Opt Step: 9005
+
+Sample 14: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3649, Opt Time: 29.74s, Opt Step: 3649
+
+Sample 15: Unsolved, % Unsat: tensor([0.0488], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 77.94s, Opt Step: 9133
+
+Sample 16: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 4176, Opt Time: 34.53s, Opt Step: 4176
+
+Sample 17: Unsolved, % Unsat: tensor([0.7532], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9968, 0.9892, 0.9917, 1.0000, 1.0000, 0.9939, 0.9895, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 69.15s, Opt Step: 9611
+
+Sample 18: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 669, Opt Time: 4.83s, Opt Step: 669
+
+Sample 19: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 4021, Opt Time: 29.47s, Opt Step: 4021
+
+Sample 20: Unsolved, % Unsat: tensor([1.8686], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9890, 0.9748, 1.0000, 1.0000, 0.9792, 0.9853, 0.9689, 0.9817, 1.0000,
+        0.9876]) Steps: 10000, Opt Time: 95.95s, Opt Step: 9786
+
+Sample 21: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 6687, Opt Time: 57.33s, Opt Step: 6687
+
+Sample 22: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 231, Opt Time: 1.75s, Opt Step: 231
+
+Sample 23: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 6728, Opt Time: 54.83s, Opt Step: 6728
+
+Sample 24: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 5133, Opt Time: 43.96s, Opt Step: 5133
+
+Sample 25: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 4814, Opt Time: 46.58s, Opt Step: 4814
+
+Sample 26: Unsolved, % Unsat: tensor([0.4272], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9942, 1.0000, 0.9987, 1.0000, 0.9938, 1.0000, 1.0000, 1.0000, 1.0000,
+        0.9946]) Steps: 10000, Opt Time: 70.66s, Opt Step: 7871
+
+Sample 27: Unsolved, % Unsat: tensor([0.1597], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9968, 1.0000, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 74.17s, Opt Step: 9950
+
+Sample 28: Unsolved, % Unsat: tensor([0.5093], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9969, 1.0000, 0.9937, 0.9969, 1.0000, 1.0000, 0.9987, 0.9940,
+        1.0000]) Steps: 10000, Opt Time: 85.47s, Opt Step: 9960
+
+Sample 29: Unsolved, % Unsat: tensor([0.1715], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 81.57s, Opt Step: 8692
+
+Sample 30: Unsolved, % Unsat: tensor([0.0568], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 78.12s, Opt Step: 8079
+
+Sample 31: Unsolved, % Unsat: tensor([0.5757], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9979, 1.0000, 1.0000, 1.0000, 1.0000, 0.9886, 1.0000, 0.9877,
+        1.0000]) Steps: 10000, Opt Time: 84.71s, Opt Step: 9543
+
+Sample 32: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3419, Opt Time: 26.83s, Opt Step: 3419
+
+Sample 33: Unsolved, % Unsat: tensor([0.0655], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 60.20s, Opt Step: 7581
+
+Sample 34: Unsolved, % Unsat: tensor([0.3218], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9980, 0.9979, 1.0000, 0.9979,
+        1.0000]) Steps: 10000, Opt Time: 97.50s, Opt Step: 9995
+
+Sample 35: Unsolved, % Unsat: tensor([0.8480], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9979, 1.0000, 1.0000, 1.0000, 1.0000, 0.9812, 1.0000, 0.9940, 0.9761,
+        1.0000]) Steps: 10000, Opt Time: 85.86s, Opt Step: 9750
+
+Sample 36: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 1812, Opt Time: 15.27s, Opt Step: 1812
+
+Sample 37: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3662, Opt Time: 31.47s, Opt Step: 3662
+
+Sample 38: Unsolved, % Unsat: tensor([1.2394], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9877, 0.9937, 0.9939, 0.9857, 0.9939, 0.9936, 1.0000, 1.0000, 1.0000,
+        0.9817]) Steps: 10000, Opt Time: 82.38s, Opt Step: 9600
+
+Sample 39: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 2067, Opt Time: 14.88s, Opt Step: 2067
+
+Sample 40: Unsolved, % Unsat: tensor([1.5130], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9815, 1.0000, 1.0000, 1.0000, 1.0000, 0.9855, 0.9880, 0.9713, 0.9908,
+        0.9788]) Steps: 10000, Opt Time: 81.32s, Opt Step: 9649
+
+Sample 41: Unsolved, % Unsat: tensor([0.5632], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9945, 0.9919, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9937,
+        0.9939]) Steps: 10000, Opt Time: 79.70s, Opt Step: 9075
+
+Sample 42: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 32, Opt Time: 0.34s, Opt Step: 32
+
+Sample 43: Unsolved, % Unsat: tensor([1.8265], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9873, 0.9910, 0.9755, 1.0000, 0.9858, 1.0000, 0.9842, 1.0000, 0.9842,
+        0.9938]) Steps: 10000, Opt Time: 95.48s, Opt Step: 9978
+
+Sample 44: Unsolved, % Unsat: tensor([1.1888], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9906, 0.9969, 0.9872, 1.0000, 1.0000, 1.0000, 0.9831, 1.0000,
+        0.9937]) Steps: 10000, Opt Time: 89.11s, Opt Step: 9805
+
+Sample 45: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3337, Opt Time: 30.93s, Opt Step: 3337
+
+Sample 46: Unsolved, % Unsat: tensor([0.2816], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 0.9979, 1.0000, 1.0000, 0.9940, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 93.24s, Opt Step: 9614
+
+Sample 47: Unsolved, % Unsat: tensor([0.5287], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9958, 1.0000, 1.0000, 1.0000, 0.9952, 1.0000, 1.0000, 0.9979,
+        1.0000]) Steps: 10000, Opt Time: 70.61s, Opt Step: 9626
+
+Sample 48: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 2204, Opt Time: 16.28s, Opt Step: 2204
+
+Sample 49: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 1866, Opt Time: 14.10s, Opt Step: 1866
+
+Sample 50: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 5233, Opt Time: 39.70s, Opt Step: 5233
+
+Sample 51: Unsolved, % Unsat: tensor([0.0457], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 10000, Opt Time: 69.60s, Opt Step: 9146
+
+Sample 52: Unsolved, % Unsat: tensor([0.0861], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9939, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 68.52s, Opt Step: 9014
+
+Sample 53: Unsolved, % Unsat: tensor([1.4025], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9821, 0.9910, 0.9755, 0.9811, 1.0000, 1.0000, 0.9789, 1.0000, 0.9920,
+        1.0000]) Steps: 10000, Opt Time: 68.02s, Opt Step: 9548
+
+Sample 54: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 5209, Opt Time: 40.89s, Opt Step: 5209
+
+Sample 55: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 281, Opt Time: 2.56s, Opt Step: 281
+
+Sample 56: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 23, Opt Time: 0.23s, Opt Step: 23
+
+Sample 57: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3278, Opt Time: 29.67s, Opt Step: 3278
+
+Sample 58: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 2099, Opt Time: 19.14s, Opt Step: 2099
+
+Sample 59: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 2529, Opt Time: 21.92s, Opt Step: 2529
+
+Sample 60: Unsolved, % Unsat: tensor([0.2563], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 0.9959, 1.0000, 0.9939, 1.0000, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 79.20s, Opt Step: 9594
+
+Sample 61: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3611, Opt Time: 29.61s, Opt Step: 3611
+
+Sample 62: Unsolved, % Unsat: tensor([1.5203], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9938, 0.9879, 1.0000, 0.9814, 1.0000, 0.9911, 1.0000, 0.9915, 0.9721,
+        1.0000]) Steps: 10000, Opt Time: 95.46s, Opt Step: 8852
+
+Sample 63: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 2900, Opt Time: 19.74s, Opt Step: 2900
+
+Sample 64: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3578, Opt Time: 24.54s, Opt Step: 3578
+
+Sample 65: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 7074, Opt Time: 55.43s, Opt Step: 7074
+
+Sample 66: Unsolved, % Unsat: tensor([1.5003], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9915, 0.9876, 1.0000, 0.9809, 0.9844, 0.9937, 1.0000, 1.0000, 0.9758,
+        0.9877]) Steps: 10000, Opt Time: 133.08s, Opt Step: 9947
+
+Sample 67: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 8674, Opt Time: 142.95s, Opt Step: 8674
+
+Sample 68: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 5908, Opt Time: 74.85s, Opt Step: 5908
+
+Sample 69: Unsolved, % Unsat: tensor([1.4351], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9873, 0.9959, 0.9939, 0.9886, 1.0000, 0.9888, 0.9845, 0.9811, 1.0000,
+        0.9937]) Steps: 10000, Opt Time: 110.18s, Opt Step: 8742
+
+Sample 70: Unsolved, % Unsat: tensor([0.4239], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 0.9970, 1.0000, 1.0000, 1.0000, 0.9886, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 155.84s, Opt Step: 9501
+
+Sample 71: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 7337, Opt Time: 97.51s, Opt Step: 7337
+
+Sample 72: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 7210, Opt Time: 69.18s, Opt Step: 7210
+
+Sample 73: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3009, Opt Time: 29.04s, Opt Step: 3009
+
+Sample 74: Unsolved, % Unsat: tensor([0.1049], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9943, 1.0000, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 89.46s, Opt Step: 9313
+
+Sample 75: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 2910, Opt Time: 23.97s, Opt Step: 2910
+
+Sample 76: Unsolved, % Unsat: tensor([1.3372], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9875, 1.0000, 0.9793, 0.9889, 1.0000, 0.9843, 1.0000, 0.9939, 0.9937,
+        1.0000]) Steps: 10000, Opt Time: 93.02s, Opt Step: 9923
+
+Sample 77: Unsolved, % Unsat: tensor([0.2414], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 1.0000, 0.9937, 1.0000, 1.0000, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 88.87s, Opt Step: 9293
+
+Sample 78: Unsolved, % Unsat: tensor([1.0763], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9905, 0.9916, 0.9938, 1.0000, 0.9909, 1.0000, 0.9937, 0.9878, 1.0000,
+        0.9937]) Steps: 10000, Opt Time: 84.82s, Opt Step: 9826
+
+Sample 79: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 7450, Opt Time: 68.49s, Opt Step: 7450
+
+Sample 80: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 1805, Opt Time: 16.89s, Opt Step: 1805
+
+Sample 81: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 479, Opt Time: 4.22s, Opt Step: 479
+
+Sample 82: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 9484, Opt Time: 81.33s, Opt Step: 9484
+
+Sample 83: Unsolved, % Unsat: tensor([1.0763], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9937, 0.9785, 0.9844, 0.9822, 1.0000, 0.9942, 1.0000, 1.0000,
+        0.9936]) Steps: 10000, Opt Time: 86.56s, Opt Step: 9986
+
+Sample 84: Unsolved, % Unsat: tensor([0.6124], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9942, 0.9920, 1.0000, 0.9958, 1.0000, 1.0000, 0.9939, 1.0000, 1.0000,
+        0.9960]) Steps: 10000, Opt Time: 85.05s, Opt Step: 9305
+
+Sample 85: Unsolved, % Unsat: tensor([0.0551], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.9987,
+        1.0000]) Steps: 10000, Opt Time: 73.61s, Opt Step: 8527
+
+Sample 86: Unsolved, % Unsat: tensor([0.5093], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9939, 1.0000, 0.9969, 1.0000, 1.0000, 1.0000, 0.9974, 1.0000, 1.0000,
+        0.9938]) Steps: 10000, Opt Time: 86.74s, Opt Step: 9912
+
+Sample 87: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 3200, Opt Time: 29.64s, Opt Step: 3200
+
+Sample 88: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 147, Opt Time: 1.48s, Opt Step: 147
+
+Sample 89: Unsolved, % Unsat: tensor([0.6081], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 0.9979, 0.9970, 1.0000, 1.0000, 0.9962, 0.9890, 1.0000, 1.0000,
+        0.9936]) Steps: 10000, Opt Time: 84.12s, Opt Step: 9746
+
+Sample 90: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 6704, Opt Time: 63.45s, Opt Step: 6704
+
+Sample 91: Unsolved, % Unsat: tensor([1.5003], device='cuda:0')% Solved Ratio Per Weight: tensor([1.0000, 1.0000, 0.9832, 0.9843, 0.9939, 0.9940, 0.9789, 0.9847, 1.0000,
+        0.9937]) Steps: 10000, Opt Time: 91.26s, Opt Step: 9661
+
+Sample 92: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 6233, Opt Time: 53.60s, Opt Step: 6233
+
+Sample 93: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 4900, Opt Time: 39.95s, Opt Step: 4900
+
+Sample 94: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 5588, Opt Time: 50.44s, Opt Step: 5588
+
+Sample 95: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 1888, Opt Time: 16.33s, Opt Step: 1888
+
+Sample 96: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 7145, Opt Time: 70.60s, Opt Step: 7145
+
+Sample 97: Unsolved, % Unsat: tensor([0.9654], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9907, 0.9947, 0.9878, 1.0000, 0.9920, 0.9936, 1.0000, 0.9958, 1.0000,
+        0.9958]) Steps: 10000, Opt Time: 84.40s, Opt Step: 9438
+
+Sample 98: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 1950, Opt Time: 15.47s, Opt Step: 1950
+
+Sample 99: Unsolved, % Unsat: tensor([0.8776], device='cuda:0')% Solved Ratio Per Weight: tensor([0.9907, 0.9958, 0.9942, 0.9908, 1.0000, 1.0000, 0.9971, 1.0000, 1.0000,
+        1.0000]) Steps: 10000, Opt Time: 80.85s, Opt Step: 9107
+
+Sample 100: Solved, % Unsat: tensor([0.], device='cuda:0')% Solved Ratio Per Weight: tensor([1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]) Steps: 4818, Opt Time: 46.53s, Opt Step: 4818
+
+Solved 51.00%, Mean % Unsat: tensor([0.3337], device='cuda:0')%, Mean Solved Ratio Per Weight: tensor([0.9981, 0.9984, 0.9982, 0.9980, 0.9986, 0.9985, 0.9979, 0.9984, 0.9984,
+        0.9984]), Average Time: 58.87s
